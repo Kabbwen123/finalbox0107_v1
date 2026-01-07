@@ -1,0 +1,41 @@
+# ======================
+# Align + Preprocess
+# ======================
+template_path: "template_pic/AligeTemplate.jpg"
+mask_path: "template_pic/AligeMask.bmp"
+
+# 与对齐图尺寸一致
+preprocess_image_size: [1520, 468]
+# 原图尺寸
+# preprocess_image_size: [3054, 933]
+
+scale: 0.5
+match_method: "ORB"
+
+preprocess_roi: null
+preprocess_contrast: 1.2
+preprocess_blur: false
+
+enable_preprocess: true
+max_images_per_call: null
+
+# ======================
+# PatchCore + Pin
+# ======================
+# [1520 468]
+model_feature_dir: "model"
+
+# 对齐图下1520 468的pin针ROI范围
+roi: [154, 20, 1364, 120]
+# 决定热力OK/NG阈值
+pc_score_thr: 110.0
+# pin针数量
+pincount: 35
+# pin针检测上下区间
+offset_up: 20
+offset_down: 40
+# 疑似瑕疵热力阈值区间
+abs_low: 100
+abs_high: 110
+# pin检测阈值
+pinsizethreshold: 200

@@ -1,0 +1,82 @@
+model:
+  # 可选：wide_resnet50_2 / resnet50 / resnet34 / resnet18
+  backbone_name: "resnet34"
+
+  # 可选：自定义 backbone 权重路径；没有就写 null
+  custom_weight_path: null
+
+  # 选择哪些 ResNet block 层融合特征：如 "1_2_3" / "2_3" / "3"
+  embedding_layers: "2_3"
+
+  # 输入尺寸 (H, W)
+  input_size: [256, 640]
+
+  # patchify 的 patch_size（特征图上的滑动窗口，必须为奇数：1/3/5/7...）
+  patch_size: 3
+
+train:
+  # 特征提取 batch size
+  batch_size: 16
+
+  # Windows 建议 0；Linux 可 2/4
+  num_workers: 0
+
+  # memory bank 上限（先按 batch 抽样，再全局抽样）
+  max_train_features: 200000
+
+  # 推理阶段 kNN 的 k 值（这里只写入 meta，推理会读取）
+  n_neighbors: 5
+
+  # 随机种子（保证抽样可复现）
+  seed: 42
+  
+  # GPU卡号
+  gpu_device_id: 0
+
+
+projection:
+  # 是否启用 Random Projection 降维（建议作为高级项）
+  use_random_projection: false
+
+  # 目标降维维度（use_random_projection=true 时生效）
+  projection_dim: 256
+
+  # RP 的随机种子
+  projection_seed: 123
+
+coreset:
+  # coreset 方式：random / kcenter
+  # - random：从 features 中随机抽 ratio 比例
+  # - kcenter：先抽 pool_size 个点做 pool，在 pool 上做 k-center greedy 选 ratio 比例
+  method: "random"
+
+  # kcenter 的 pool 大小（method=kcenter 时生效）
+  pool_size: 10000
+
+  # 抽样比例：0~1
+  ratio: 1.0
+
+  # kcenter 初始化方式：random / farthest_from_mean
+  kcenter_init: "farthest_from_mean"
+
+faiss:
+  index_type: "Flat"     # Flat / IVFFlat / IVFPQ / HNSW
+  ivf_nlist: 2048
+  ivf_nprobe: 20
+
+  pq_m: 32
+  pq_nbits: 8
+
+  hnsw_m: 32
+  hnsw_ef_construction: 200
+  hnsw_ef_search: 128
+
+  # 是否保存 memory_bank.npy
+  # - 如果你坚持“只用 faiss_index.bin”，就设为 false（推荐）
+  # - 如果你想保留兜底/调试，也可以设 true
+  save_memory_bank: false
+
+preprocess:
+  use_preprocess: True
+  preprocess_blur: false
+  preprocess_contrast: 1.2
