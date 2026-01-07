@@ -1,0 +1,39 @@
+logger:
+  enable_file_logging: true
+
+sqlite:
+  db_path: "DB/Train.db"
+  table:
+    project:
+      column_names:
+        name: "TEXT UNIQUE"
+        type: "TEXT"
+        template_path: "TEXT"
+        mask_path: "TEXT"
+        create_time: "TEXT"
+    image:
+      column_names:
+        project_id: "TEXT"
+        name: "TEXT"
+        path_convert: "TEXT"
+        tag: "TEXT"
+        subtag: "TEXT"
+    model:
+      column_names:
+        project_id: "INTEGER"
+        model_name: "TEXT"
+        dataset: "JSON"
+        config: "JSON"  #???????????
+        create_time: "TEXT"
+        path: "TEXT"
+    assessResult:
+      column_names:
+        model_id: "INTEGER"
+        tag: "TEXT"
+        label: "TEXT" # ??? ok/ng
+        score: "TEXT"
+        img_path: "TEXT"
+        img_path_cvt: "TEXT" # ?????
+        defect_count: "TEXT"
+        detect_time: "TEXT"  # ms
+
